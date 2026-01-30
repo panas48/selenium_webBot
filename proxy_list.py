@@ -1,6 +1,8 @@
 from bs4 import BeautifulSoup as b
 import lxml
-import urllib2 as urllib
+# import urllib2 as urllib
+import urllib.request as urllib
+
 import time
 def grabProxiesHttp():
     site = 'https://free-proxy-list.net/'
@@ -31,3 +33,33 @@ def grabProxiesHttp():
     return proxies
 
 #grabProxiesHttp()
+
+
+##########################################################
+# It’s used to hide the real IP address and avoid limits when creating many accounts.
+
+
+# Opens the proxy list website
+
+# Reads the page HTML
+
+# Finds proxy IP and port values
+
+# Filters for HTTP proxies
+
+# Builds IP:PORT strings
+
+# Returns the proxy list
+
+##
+
+# Downloads a list of public proxy servers
+
+# Picks one proxy
+
+# Tests if it works
+
+# Configures the browser to use that proxy
+
+# Opens the website through the proxy
+##########################################################

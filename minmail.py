@@ -54,3 +54,23 @@ if __name__ == '__main__':
 	except KeyboardInterrupt:
 		box.close()
 		sys.exit(0)
+
+
+##########################################################
+# This file connects to a disposable email service, 
+# generates a temporary email address, 
+# and waits until a confirmation email arrives so the main bot can finish account registration.
+
+
+# Connects to dropmail.me using a WebSocket
+
+# Receives a temporary email address
+
+# Gives that email address to the signup bot
+
+# Waits until an email arrives
+
+# Reads the text of the first email
+
+# Returns that text to the main program
+##########################################################

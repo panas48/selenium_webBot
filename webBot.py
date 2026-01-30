@@ -49,7 +49,9 @@ from private import *
 #Comprueba si el proxy dado funciona correctamente
 def checkProxy(proxy):
     try:
-        print "Trying proxy: "+proxy
+        # print "Trying proxy: "+proxy
+        print("Trying proxy: " + proxy)
+
         http_p="http://"+proxy
         proxyDict = {"http" : http_p}
         r = requests.get("http://ip.42.pl/raw", proxies=proxyDict, timeout=5) #Nos devuelve la ip que debería ser la del proxy
@@ -79,7 +81,9 @@ def createBrowser(url,proxy):
         try:
             browser.get(url)
         except TimeoutException:
-            print "TimeOut browser.get(url)"
+            # print "TimeOut browser.get(url)"
+            print("Trying proxy: " + proxy)
+
             return False
         return True
     except:
@@ -94,8 +98,9 @@ def elem_write(element, text):
     for letter in text:
         sleep(random.random()/2.8)
         element.send_keys(letter)
+        
 
- #Le damos la primera acción a ejecutar para que compruebe si ha cargado bien la pagina
+ #HARD-CODED(1)
 def checkLoadBrowser():
     global browser
     my_sleep(20)
@@ -113,7 +118,7 @@ def checkLoadBrowser():
         ActionChains(browser).move_to_element(sign_up_box).click(sign_up_box).perform()
 
 
-
+ #HARD-CODED(2)
 def sign_in(mail, passw, name, last_name):
     global browser
 
@@ -156,7 +161,7 @@ def getPass():
         passw += random.choice(s)
     return passw
 
-#Pulsa el boton de reenviar mail
+#HARD-CODED(3)
 def resend_mail():
     browser.execute_script('document.getElementsByClassName("btn-send-login")[0].click()')
 
@@ -182,7 +187,10 @@ def fin_reg(url_confirm, proxy):
 def getConfirmUrl(msg_confirm):
     urls = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', msg_confirm)
     confirm_url = urls[2].replace("https", "http")
-    print confirm_url
+    
+    # print confirm_url
+    print(confirm_url)
+
     return confirm_url
 
 #Recibe el mail de confirmación, si no lo recibe en 20seg pulsa el boton de reenviar y espera otros 20 seg
@@ -198,7 +206,9 @@ def getConfirmMail(mb):
                 msg_confirm = mb.getCorreo()
                 return getConfirmUrl(msg_confirm)
         except:
-            print "No ha llegado el correo"
+            # print "No ha llegado el correo"
+            print("No ha llegado el correo")
+
             exit(90)
 
 #Guarda el usuario y contraseña en un archivo
@@ -214,7 +224,9 @@ def logic(usernames_path, last_names_path, new_users_path):
         proxies = grabProxiesHttp()
         for proxy in proxies:
             if checkProxy(proxy):
-                print proxy
+                # print proxy
+                print(proxy)
+
                 if not createBrowser(URL, proxy): #Se da un timeout pasamos al siguiente proxy
                     browser.close()
                 else:
@@ -222,7 +234,9 @@ def logic(usernames_path, last_names_path, new_users_path):
                         checkLoadBrowser()
                         break
                     except:
-                        print "Ha fallado checkLoadBrowser()"
+                        # print "Ha fallado checkLoadBrowser()"
+                        print("Ha fallado checkLoadBrowser()")
+
                         browser.close()
 
         mb = mailbox()
@@ -231,10 +245,12 @@ def logic(usernames_path, last_names_path, new_users_path):
             mb.close()
             mb = mailbox()
             mail = mb.getMailAdd()
-        print mail
+        # print mail
+        print (mail)
 
         passw = getPass() #Obtenemos una apass random
-        print passw
+        # print passw
+        print(passw)
 
         username = getRandLine(usernames_path)
         last_name = getRandLine(last_names_path)
@@ -248,7 +264,9 @@ def logic(usernames_path, last_names_path, new_users_path):
         saveNewUser(mail,passw,new_users_path) #Guardamos el nuevo usuario
         return True
     except:
-        print "Something went wrong"
+        # print "Something went wrong"
+        print ("Something went wrong")
+
         return False
 
 
@@ -260,16 +278,20 @@ def main(argv):
     usernames_path = os.path.dirname(os.path.abspath(__file__))+"/usernames.txt"
     last_names_path = os.path.dirname(os.path.abspath(__file__))+"/last_names.txt"
     new_users_path = os.path.dirname(os.path.abspath(__file__))+"/users.txt"
-    n_new_users = 50
+    n_new_users = 5 #NUMBER OF ACCOUNTS
     help_msg = 'webBot.py [-c <num_new_users>] [-n <usaernamesfile>] [-l <lastnamesfile>] [-o <newusersfile>]'
     try:
         opts, args = getopt.getopt(argv,"hc:n:l:o:",["numnewusers=","usernames=","lastnames=","newusers="])
     except getopt.GetoptError:
-        print help_msg
+        # print help_msg
+        print (help_msg)
+
         sys.exit(2)
     for opt, arg in opts:
         if opt == '-h':
-            print help_msg
+            # print help_msg
+            print (help_msg)
+
             sys.exit()
         elif opt in ("-n", "--usernames"):
             usernames_path = arg
@@ -284,9 +306,50 @@ def main(argv):
     while(cont < n_new_users):
         if logic(usernames_path, last_names_path, new_users_path):
             cont+=1
-            print "Creados "+str(cont)+" usuarios"
+            # print "Creados "+str(cont)+" usuarios"
+            print ("Creados "+str(cont)+" usuarios")
+
             browser.close()
 
 
 if __name__ == "__main__":
    main(sys.argv[1:])
+
+
+
+# What it does, step by step
+
+# Gets a list of proxy servers
+# → so each signup looks like it comes from a different IP.
+
+# Tests proxies
+# → keeps only the ones that work.
+
+# Opens a browser through a proxy
+# → uses Selenium + Firefox + random user-agent.
+
+# Opens the target website
+# → the URL comes from private.py.
+
+# Navigates to the signup form
+# → clicks hard-coded buttons and links on the page.
+
+# Creates fake user data
+# → random name, random password, temporary email.
+
+# Submits the signup form
+# → fills fields and presses submit.
+
+# Waits for the confirmation email
+# → uses a disposable inbox (dropmail).
+
+# Clicks the confirmation link
+# → finishes registration (birthday, gender).
+
+# Saves the account credentials
+# → writes email:password to a file.
+
+# Repeats this process many times
+# → until the requested number of accounts is created.
+
+
